@@ -1,0 +1,52 @@
+name: Build Wheels
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  checkout:
+    name: Checkout Code
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+  build:
+    name: Build wheels on ${{ matrix.arch }}
+    runs-on: ${{ matrix.runner }}
+    needs: checkout
+    strategy:
+      matrix:
+        include:
+          - arch: aarch64
+            runner: ubuntu-22.04-arm
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build wheels for multiple packages in Alpine
+        run: |
+          mkdir -p wheels
+          docker run --rm -v ${{ github.workspace }}:/workspace -w /workspace python:3.11-alpine sh -c "
+            set -e
+            apk add --no-cache build-base python3-dev musl-dev libffi-dev portmidi-dev \
+            && pip install --upgrade pip setuptools wheel \
+            && PACKAGES='luma.oled luma.lcd mido rtmidi-python \
+            && for pkg in \$PACKAGES; do pip wheel \$pkg --wheel-dir=/workspace/wheels; done \
+            && pip freeze > /tmp/requirements.txt \
+            && pip wheel -r /tmp/requirements.txt --wheel-dir=/workspace/wheels
+          "
+
+      - name: Upload binaries to release using uploadtool
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          UPLOADTOOL_BODY: "Automated build from commit ${{ github.sha }}\\nBuilt on ${{ github.event.head_commit.timestamp }}\\nBranch: ${{ github.ref_name }}"
+        run: |
+          set -e
+          cd wheels
+          zip -r wheels.zip *.whl
+          wget -c https://github.com/probonopd/uploadtool/raw/master/upload.sh
+          bash upload.sh *.zip
