@@ -28,7 +28,7 @@ jobs:
             apk add --no-cache build-base python3-dev musl-dev libffi-dev portmidi-dev git sdl2-dev
             apk add --no-cache build-base python3-dev musl-dev libffi-dev portmidi-dev clang cmake ninja qt6-qtbase
             pip install --upgrade pip setuptools wheel
-            pip install pyside6
+            pip install PySide6
             cp dist/*.whl /workspace/wheels/
             # Install all packages so they appear in freeze
             pip install luma.oled mido python-rtmidi alsa-midi
