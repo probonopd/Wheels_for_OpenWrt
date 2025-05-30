@@ -28,7 +28,7 @@ jobs:
             apk add --no-cache build-base python3-dev musl-dev libffi-dev portmidi-dev
             pip install --upgrade pip setuptools wheel
             # Install all packages so they appear in freeze
-            pip install luma.oled mido python-rtmidi rtmidi-python
+            pip install luma.oled mido python-rtmidi
             pip install git+https://github.com/rm-hull/luma.examples.git
             pip install luma.lcd
             # Freeze to capture all installed deps
