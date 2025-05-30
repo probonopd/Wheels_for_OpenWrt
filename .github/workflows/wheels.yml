@@ -27,7 +27,6 @@ jobs:
             set -e
             apk add --no-cache build-base python3-dev musl-dev libffi-dev portmidi-dev git sdl2-dev
             pip install --upgrade pip setuptools wheel
-            cp dist/*.whl /workspace/wheels/
             # Install all packages so they appear in freeze
             pip install luma.oled mido python-rtmidi alsa-midi
             pip install git+https://github.com/rm-hull/luma.examples.git
