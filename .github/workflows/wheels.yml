@@ -25,7 +25,7 @@ jobs:
           mkdir -p wheels
           docker run --rm -v ${{ github.workspace }}:/workspace -w /workspace python:3.11-alpine sh -c '
             set -e
-            apk add --no-cache build-base python3-dev musl-dev libffi-dev portmidi-dev
+            apk add --no-cache build-base python3-dev musl-dev libffi-dev portmidi-dev git
             pip install --upgrade pip setuptools wheel
             # Install all packages so they appear in freeze
             pip install luma.oled mido python-rtmidi
