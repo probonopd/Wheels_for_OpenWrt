@@ -26,7 +26,14 @@ jobs:
           docker run --rm -v ${{ github.workspace }}:/workspace -w /workspace python:3.11-alpine sh -c '
             set -e
             apk add --no-cache build-base python3-dev musl-dev libffi-dev portmidi-dev git sdl2-dev
+            apk add --no-cache build-base python3-dev musl-dev libffi-dev portmidi-dev clang cmake ninja qt6-qtbase-dev qt6-qttools-dev qt6-qtbase-static
             pip install --upgrade pip setuptools wheel
+            # Build PySide6
+            git clone --depth=1 https://code.qt.io/pyside/pyside-setup.git
+            cd pyside-setup
+            python3 setup.py bdist_wheel \
+              --parallel=8 --ignore-git --reuse-build --standalone --limited-api=yes
+            cp dist/*.whl /workspace/wheels/
             # Install all packages so they appear in freeze
             pip install luma.oled mido python-rtmidi alsa-midi
             pip install git+https://github.com/rm-hull/luma.examples.git
