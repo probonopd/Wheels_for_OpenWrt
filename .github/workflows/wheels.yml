@@ -24,7 +24,7 @@ jobs:
         run: |
           mkdir -p wheels
           docker run --rm -v ${{ github.workspace }}:/workspace -w /workspace python:3.11-alpine sh -c "
-            set -e
+            set -e \
             apk add --no-cache build-base python3-dev musl-dev libffi-dev portmidi-dev \
             && pip install --upgrade pip setuptools wheel \
             && PACKAGES='luma.oled luma.lcd mido rtmidi-python \
