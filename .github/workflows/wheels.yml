@@ -27,12 +27,12 @@ jobs:
             set -e
             apk add --no-cache build-base python3-dev musl-dev libffi-dev portmidi-dev git sdl2-dev
             apk add --no-cache build-base python3-dev musl-dev libffi-dev portmidi-dev clang cmake ninja qt6-qtbase-dev
-            pip install --upgrade pip setuptools wheel packaging
+            pip install --upgrade pip setuptools wheel==0.40.0 packaging
             # Build PySide6
             git clone --depth=1 https://code.qt.io/pyside/pyside-setup.git
             cd pyside-setup
             python3 setup.py bdist_wheel \
-              --parallel=8 --ignore-git --reuse-build --standalone --limited-api=yes
+              --parallel=8 --ignore-git --reuse-build --standalone --limited-api=yes --no-qt-tools
             cp dist/*.whl /workspace/wheels/
             # Install all packages so they appear in freeze
             pip install luma.oled mido python-rtmidi alsa-midi
