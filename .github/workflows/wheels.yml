@@ -23,15 +23,17 @@ jobs:
       - name: Build wheels for multiple packages in Alpine
         run: |
           mkdir -p wheels
-          docker run --rm -v ${{ github.workspace }}:/workspace -w /workspace python:3.11-alpine sh -c "
-            set -e \
-            apk add --no-cache build-base python3-dev musl-dev libffi-dev portmidi-dev \
-            && pip install --upgrade pip setuptools wheel \
-            && PACKAGES='luma.oled luma.lcd mido rtmidi-python \
-            && for pkg in \$PACKAGES; do pip wheel \$pkg --wheel-dir=/workspace/wheels; done \
-            && pip freeze > /tmp/requirements.txt \
-            && pip wheel -r /tmp/requirements.txt --wheel-dir=/workspace/wheels
-          "
+          docker run --rm -v ${{ github.workspace }}:/workspace -w /workspace python:3.11-alpine sh -c '
+            set -e
+            apk add --no-cache build-base python3-dev musl-dev libffi-dev portmidi-dev
+            pip install --upgrade pip setuptools wheel
+            PACKAGES="luma.oled luma.lcd luma.examples mido python-rtmidi rtmidi-python"
+            for pkg in $PACKAGES; do
+              pip wheel "$pkg" --wheel-dir=/workspace/wheels
+            done
+            pip freeze > /tmp/requirements.txt
+            pip wheel -r /tmp/requirements.txt --wheel-dir=/workspace/wheels
+          '
 
       - name: Upload binaries to release using uploadtool
         env:
