@@ -27,7 +27,7 @@ jobs:
             set -e
             apk add --no-cache build-base python3-dev musl-dev libffi-dev portmidi-dev git sdl2-dev
             apk add --no-cache build-base python3-dev musl-dev libffi-dev portmidi-dev clang cmake ninja qt6-qtbase-dev
-            pip install --upgrade pip setuptools wheel
+            pip install --upgrade pip setuptools wheel packaging
             # Build PySide6
             git clone --depth=1 https://code.qt.io/pyside/pyside-setup.git
             cd pyside-setup
